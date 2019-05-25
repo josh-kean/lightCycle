@@ -1,12 +1,13 @@
 class Car:
-    def __init__(self, width=50, length=100, color, player):
+    def __init__(self, color, player, location, width=50, length=100):
         self.width = width
         self.length = length
         self.color = color
         self.player = player
+        self.location = location
+
 
     def displayCar(self):
-        #draw a square of length, width, and color
         pass
 
     def leaveRail(self, time=60):
