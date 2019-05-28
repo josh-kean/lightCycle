@@ -12,6 +12,7 @@ crashCoordinates = []
 
 width, height = 750, 750
 colors = {'white': (255, 255, 255), 'black': (0,0,0)}
+display = pygame.display.set_mode((width, height))
 
 def random_color():
     return (random.randint(0,255), random.randint(0,255), random.randint(0,255))
@@ -22,7 +23,7 @@ def random_color():
 def create_player(playerName, width, length):
     playerScores[playerName] = 0
     playerNames.append(playerName)
-    playerColors[playerName] = random_color
+    playerColors[playerName] = random_color()
     return car.Car(playerColors[playerName], playerName, (100, 200), width, length)
     #function also checks to make sure random color isn't in list of playerColors
 
@@ -41,7 +42,13 @@ def light_cycle(display):
     playerOne = create_player('josh', carWidth, carLength)
     crashed = False
     while crashed == False:
-        pygame.draw.rect(display, playerOne.color, (playerOne.location[0], playerOne.location[1], playerOne.width, playerOne.length))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        pygame.draw.rect(display, playerOne.color, (playerOne.location[0],
+            playerOne.location[1], playerOne.width, playerOne.length))
+        pygame.display.update()
 
 def start_screen():
     while True:
@@ -49,8 +56,8 @@ def start_screen():
             if action.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-        display = pygame.display.set_mode((width, height))
         display.fill(colors['white'])
+
         light_cycle(display)
         pygame.display.update()
 

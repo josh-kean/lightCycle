@@ -1,3 +1,5 @@
+import pygame
+
 class Car:
     def __init__(self, color, player, location, width=50, length=100):
         self.width = width
@@ -7,8 +9,9 @@ class Car:
         self.location = location
 
 
-    def displayCar(self):
-        pass
+    def displayCar(self, display):
+        # self.display = display
+        pygame.draw.rect(display, self.color, (self.location[0], self.location[1], self.width, self.length))
 
     def leaveRail(self, time=60):
         #keep a square at cars previous location for set amount of time
