@@ -3,6 +3,7 @@ import car
 import math
 import random
 
+
 pygame.init()
 
 playerNames = []
@@ -14,6 +15,7 @@ width, height = 750, 750
 colors = {'white': (255, 255, 255), 'black': (0,0,0)}
 display = pygame.display.set_mode((width, height))
 
+clock = pygame.time.Clock()
 def random_color():
     return (random.randint(0,255), random.randint(0,255), random.randint(0,255))
 
@@ -24,7 +26,7 @@ def create_player(playerName, width, length):
     playerScores[playerName] = 0
     playerNames.append(playerName)
     playerColors[playerName] = random_color()
-    return car.Car(playerColors[playerName], playerName, (100, 200), width, length)
+    return car.Car(playerColors[playerName], playerName, [100, 200], width, length)
     #function also checks to make sure random color isn't in list of playerColors
 
 def declare_winner(playerName):
@@ -41,14 +43,32 @@ def light_cycle(display):
     carWidth = int(carLength/2)
     playerOne = create_player('josh', carWidth, carLength)
     crashed = False
+
+    #have car start in motion going up
+    xChange = 50
+    yChange = 0
+
+    event = pygame.event.poll()
     while crashed == False:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+        if playerOne.location[0] > width-50 or playerOne.location[0] < 50:
+            crashed = True
+        if playerOne.location[1] > height-50 or playerOne.location[1] < 50:
+            crashed = True
+        display.fill(colors['white'])
         pygame.draw.rect(display, playerOne.color, (playerOne.location[0],
             playerOne.location[1], playerOne.width, playerOne.length))
+        carPosition = playerOne.KeyBoard(event, xChange, yChange)
+        xChange = carPosition[0]
+        yChange = carPosition[1]
+        playerOne.location[0] += carPosition[0]
+        playerOne.location[1] += carPosition[1]
         pygame.display.update()
+        clock.tick(7)
 
 def start_screen():
     while True:

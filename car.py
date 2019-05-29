@@ -17,7 +17,7 @@ class Car:
         #keep a square at cars previous location for set amount of time
         pass
 
-    def KeyBoard(event, x_change, y_change):
+    def KeyBoard(self, event, x_change, y_change):
         if event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_LEFT and x_change == 0:
