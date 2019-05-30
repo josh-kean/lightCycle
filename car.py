@@ -23,13 +23,18 @@ class Car:
             if event.key == pygame.K_LEFT and x_change == 0:
                 x_change = -self.length
                 y_change = 0
+                self.width, self.length = self.length, self.width
             elif event.key == pygame.K_RIGHT and x_change == 0:
                 x_change = self.length
                 y_change = 0
+                self.width, self.length = self.length, self.width
             elif event.key == pygame.K_UP and y_change == 0:
                 y_change = -self.length
                 x_change = 0
+                self.width, self.length = self.length, self.width
             elif event.key == pygame.K_DOWN and y_change == 0:
                 y_change = self.length
                 x_change = 0
+                self.width, self.length = self.length, self.width
+
         return [x_change, y_change]
