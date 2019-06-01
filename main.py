@@ -34,7 +34,7 @@ def create_player(playerName, width, length):
 #creates a line 10 car lengths back
 def create_line_position(x, y, length, width):
     linePosition.append([x,y, length, width])
-    if len(linePosition) > 10:
+    if len(linePosition) > 20:
         del linePosition[0]
 
 #draws line from function create_line_position
@@ -47,22 +47,21 @@ def draw_line(linePositions, display, color, length, width):
 def declare_winner(playerName):
     playerNames[playerName] +=1
 
-def detect_crash(location, player):
-    if location in crashCoordinates:
-        #other player is declared winner
-        winner = string(playerNames.pop(player))
-    declare_winner(player)
+def detect_crash(locations, player):
+    for location in locations:
+        if location == [player[0], player[1]]:
+            return True
+    return False
 
 def light_cycle(display):
-    carWidth = 50
-    carLength = int(carWidth/2)
+    carWidth = 10
+    carLength = int(carWidth)
     playerOne = create_player('josh', carWidth, carLength)
     crashed = False
     collisionPosition = []
 
     #have car start in motion going up
-    xChange = 50
-    yChange = 0
+    xChange, yChange = carWidth, 0
 
     event = pygame.event.poll()
     while crashed == False:
@@ -84,8 +83,9 @@ def light_cycle(display):
         playerOne.location[0] += carPosition[0]
         playerOne.location[1] += carPosition[1]
         create_line_position(playerOne.location[0],playerOne.location[1], playerOne.width, playerOne.length)
+        # crashed = detect_crash(linePosition, [playerOne.location[0], playerOne.location[1]])
         pygame.display.update()
-        clock.tick(7)
+        clock.tick(20)
 
 def start_screen():
     while True:
