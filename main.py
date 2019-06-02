@@ -3,16 +3,16 @@ import car
 import math
 import random
 
-
 pygame.init()
 
 playerNames = []
 linePosition = []
+crashPositions = []
 playerScores = {}
 playerColors = {}
 crashCoordinates = []
 
-width, height = 750, 750
+width, height = 1000, 1000
 colors = {'white': (255, 255, 255), 'black': (0,0,0)}
 display = pygame.display.set_mode((width, height))
 
@@ -33,9 +33,15 @@ def create_player(playerName, width, length):
 
 #creates a line 10 car lengths back
 def create_line_position(x, y, length, width):
+    lineLength = 20
     linePosition.append([x,y, length, width])
-    if len(linePosition) > 20:
-        del linePosition[0]
+    # if len(linePosition) > lineLength:
+    #     del linePosition[0]
+    # creates list of just x and y coordinates
+    crashPositions.append([x,y])
+    # if len(crashPositions) > lineLength:
+    #     del crashPositions[0]
+
 
 #draws line from function create_line_position
 def draw_line(linePositions, display, color, length, width):
@@ -43,47 +49,45 @@ def draw_line(linePositions, display, color, length, width):
         pygame.draw.rect(display, color, (position[0], position[1],
             position[2], position[3]))
 
+def clear_lists():
+    crashPositions = []
+    linePosition = []
 
 def declare_winner(playerName):
     playerNames[playerName] +=1
 
-def detect_crash(locations, player):
-    for location in locations:
-        if location == [player[0], player[1]]:
-            return True
-    return False
-
 def light_cycle(display):
-    carWidth = 10
+    carWidth = 20
     carLength = int(carWidth)
     playerOne = create_player('josh', carWidth, carLength)
     crashed = False
-    collisionPosition = []
 
     #have car start in motion going up
     xChange, yChange = carWidth, 0
-
     event = pygame.event.poll()
     while crashed == False:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-        if playerOne.location[0] > width-50 or playerOne.location[0] < 50:
+        if playerOne.location[0] > width-50 or playerOne.location[0] < 50 or playerOne.location[1] > height-50 or playerOne.location[1] < 50:
             crashed = True
-        if playerOne.location[1] > height-50 or playerOne.location[1] < 50:
-            crashed = True
+            pygame.quit()
+            quit()
         display.fill(colors['white'])
+        if playerOne.location in crashPositions[:-1]:
+            crashed = True
+            pygame.quit()
+            quit()
+
         draw_line(linePosition, display, playerOne.color, playerOne.length, playerOne.width)
         pygame.draw.rect(display, playerOne.color, (playerOne.location[0],
             playerOne.location[1], playerOne.width, playerOne.length))
         carPosition = playerOne.KeyBoard(event, xChange, yChange)
-        xChange = carPosition[0]
-        yChange = carPosition[1]
+        xChange, yChange = carPosition[0], carPosition[1]
         playerOne.location[0] += carPosition[0]
         playerOne.location[1] += carPosition[1]
         create_line_position(playerOne.location[0],playerOne.location[1], playerOne.width, playerOne.length)
-        # crashed = detect_crash(linePosition, [playerOne.location[0], playerOne.location[1]])
         pygame.display.update()
         clock.tick(20)
 
